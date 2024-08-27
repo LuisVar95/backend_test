@@ -6,12 +6,11 @@ import moment from 'moment-timezone';
 const obtenerRegistrosHoy = async (req, res) => {
     try {
         // Obtener la fecha actual en la zona horaria de México
-        const fechaHoy = moment().tz('America/Mexico_City').format('YYYY-MM-DD');
-        console.log(fechaHoy); // Obtiene la fecha actual en formato "YYYY-MM-DD"
+        const fechaHoy = moment().tz('America/Mexico_City').startOf('day');
 
         // Convertir la fecha de hoy a un rango de fechas en UTC
-        const inicioHoy = moment.tz(`${fechaHoy}T00:00:00`, 'America/Mexico_City').utc().format();
-        const finHoy = moment.tz(`${fechaHoy}T23:59:59.999`, 'America/Mexico_City').utc().format();
+        const inicioHoy = fechaHoy.clone().utc().format();
+        const finHoy = fechaHoy.clone().endOf('day').utc().format();
 
         // Consultar los registros en la base de datos
         const registros = await Generadores.findAll({
